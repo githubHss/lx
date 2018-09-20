@@ -22,7 +22,7 @@ export default new Router({
       component: JobList
     },
     {
-      path: '/jobs/id',
+      path: '/jobs/:id',
       name: 'JobDetails',
       component: JobDetails
     },

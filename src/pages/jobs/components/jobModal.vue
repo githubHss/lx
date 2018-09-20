@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-button type="primary" v-on:click="showModal">{{}}</a-button>
+    <span  @click="showModal"><slot name="click"> </slot></span>
     <a-modal
       width="640px"
       title="Title"
@@ -30,8 +30,8 @@
             placeholder='Select a option and change input text above'
             @change="this.handleSelectChange"
           >
-            <a-select-option value='male'>图片入库</a-select-option>
-            <a-select-option value='female'>视频流实时分析</a-select-option>
+            <a-select-option value='picture'>图片入库</a-select-option>
+            <a-select-option value='video'>视频流实时分析</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item
@@ -39,15 +39,21 @@
           :labelCol="{ span: 6 }"
           :wrapperCol="{ span: 14 }"
           fieldDecoratorId="gender"
-          :fieldDecoratorOptions="{rules: [{ required: true, message: '请选择任务类型' }]}"
+          :fieldDecoratorOptions="{rules: [{ required: true, message: '请选择人像库' }]}"
         >
-          <a-select
-            placeholder='Select a option and change input text above'
-            @change="this.handleSelectChange"
-          >
-            <a-select-option value='male'>图片入库</a-select-option>
-            <a-select-option value='female'>视频流实时分析</a-select-option>
+          <a-select>
+            <a-select-option value='male'>lynxi</a-select-option>
           </a-select>
+        </a-form-item>
+        <a-form-item
+          v-show="videoStream"
+          label='视屏流路径'
+          :labelCol="{ span: 6 }"
+          :wrapperCol="{ span: 14 }"
+          fieldDecoratorId="note"
+          :fieldDecoratorOptions="{rules: [{ message: '请输入任务名称' }]}"
+        >
+          <a-input />
         </a-form-item>
         <a-form-item
           label='调度方式'
@@ -88,24 +94,25 @@
           @ok="onOk"
         />
       </a-form-item>
-
       </a-form>
     </a-modal>
   </div>
 </template>
 <script>
+  import api from "../../../api/api"
   export default {
     data() {
       return {
         ModalText: 'Content of the modal',
-        visible: false,
         confirmLoading: false,
-        formLayout: 'horizontal',
+        formLayout: {},
+        visible:false,
+        videoStream:false
       }
     },
     methods: {
       showModal() {
-        this.visible = true
+        this.visible=true;
       },
       handleOk(e) {
         this.ModalText = 'The modal will be closed after two seconds';
@@ -129,9 +136,12 @@
       },
       handleSelectChange (value) {
         console.log(value)
-        this.form.setFieldsValue({
-          note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-        })
+        if(value === 'video'){
+          this.videoStream=true
+        }else{ this.videoStream=false}
+        // this.form.setFieldsValue({
+        //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
+        // })
       },
       onChange(value, dateString) {
         console.log('Selected Time: ', value);

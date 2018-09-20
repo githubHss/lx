@@ -33,22 +33,6 @@
 <script>
   import reqwest from 'reqwest';
   import libraryModal from './libraryModal';
-  const columns = [{
-    dataIndex: 'name',
-    key:'name',
-    slots: { title: 'customTitle' },
-    scopedSlots: { customRender: 'name' },
-  }, {
-    title: '类型',
-    dataIndex: 'gender',
-  }, {
-    title: '状态',
-    dataIndex: 'email',
-  }, {
-    title: '',
-    dataIndex: 'operation',
-    scopedSlots: { customRender: 'operation' },
-  }];
 
   export default {
     name:'jobList',
@@ -63,7 +47,22 @@
         data: [],
         pagination: {},
         loading: false,
-        columns,
+        columns:[{
+          dataIndex: 'name',
+          key:'name',
+          slots: { title: 'customTitle' },
+          scopedSlots: { customRender: 'name' },
+        }, {
+          title: '类型',
+          dataIndex: 'gender',
+        }, {
+          title: '状态',
+          dataIndex: 'email',
+        }, {
+          title: '',
+          dataIndex: 'operation',
+          scopedSlots: { customRender: 'operation' },
+        }]
       }
     },
     methods: {

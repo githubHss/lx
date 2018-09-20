@@ -4,19 +4,18 @@ import { PAGE_SIZE } from '../constants';
 const base = '/api/v1/jm'
 
 export default {
-  getJobList (type,page=0) {
-      axios.get(`${base}/jobs?page=${page}&limit=${PAGE_SIZE}`).then(res=>{
-      console.log(res)
-    }).catch(function (error) {
-      console.log(error);
+  getJobList (page=0,params={}) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${base}/jobs?page=${page}&limit=${PAGE_SIZE}`,{data:params}).then(function (response) {
+        resolve(response.data)
+      })
+        .catch(function (err) {
+          reject(err)
+        })
     })
   },
-  getLibraryList (type,page=0) {
-    axios.get(`${base}/libraries?offset=${page * PAGE_SIZE}&limit=${PAGE_SIZE}`).then(res=>{
-      console.log(res)
-    }).catch(function (error) {
-      console.log(error);
-    })
+  getLibraryList (page=0) {
+    axios.get(`${base}/libraries?offset=${page * PAGE_SIZE}&limit=${PAGE_SIZE}`)
   },
   create(type,jData){
     axios({

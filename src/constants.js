@@ -7,9 +7,9 @@ export const JobTypes = {
 };
 
 export const JobStatus = {
-  'new': { title: '新创建', status: 'default'},
-  'pending': { title: '等待中', status: 'warning'},
-  'running': { title: '运行中', status: 'processing'},
-  'done': { title: '已完成', status: 'success'},
-  'failed': { title: '已失败', status: 'failed'},
+  "new": { title: '新创建', status: 'default'},
+  "pending": { title: '等待中', status: 'warning'},
+  "running": { title: '运行中', status: 'processing'},
+  "done": { title: '已完成', status: 'success'},
+  "failed": { title: '已失败', status: 'failed'},
 };

@@ -14,23 +14,41 @@ export default {
         })
     })
   },
-  getLibraryList (page=0) {
-    axios.get(`${base}/libraries?offset=${page * PAGE_SIZE}&limit=${PAGE_SIZE}`)
+  getLibraryList (params={}) {
+    return new Promise((resolve, reject) => {
+      // axios.get(`${base}/libraries?offset=${page*PAGE_SIZE}&limit=${PAGE_SIZE}`,{data:params}).then(function (response) {
+      axios.get(`${base}/libraries?offset=0&limit=${PAGE_SIZE}`,{data:params}).then(function (response) {
+        resolve(response.data)
+      })
+        .catch(function (err) {
+          reject(err)
+        })
+    })
   },
   create(type,jData){
-    axios({
-      method: 'post',
-      url: `${base}/${type}`,
-      data: JSON.stringify(jData)
-    });
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'post',
+        url: `${base}/${type}`,
+        data: JSON.stringify(jData)
+      });
+    })
   },
   remove(type,id){
-    axios.delete(`${base}/${type}/${id}`)
-      .then(res=>{console.log(`成功！${res}`)}).catch(error=>{console.log(error)})
+    return new Promise((resolve, reject) => {
+      axios.delete(`${base}/${type}/${id}`)
+        .then(res => {
+          console.log(`成功！${res}`)
+        }).catch(error => {
+        console.log(error)
+      })
+    })
   },
   getDetail(type,id){
+    return new Promise((resolve, reject) => {
   axios.get(`${base}/${type}/${id}`)
     .then(res=>{console.log(`成功！${res}`)}).catch(error=>{console.log(error)})
+    })
   },
   update(type,id,jData){
     axios({
@@ -47,7 +65,14 @@ export default {
     });
   },
   libraryListItems(id, { page = 1, limit = 24 }){
-    axios(`${base}/libraries${id}/items?offset=${page * limit}&limit=${limit}`);
+    return new Promise((resolve, reject) => {
+      axios(`${base}/libraries${id}/items?offset=${page * limit}&limit=${limit}`).then(function (response) {
+        resolve(response.data)
+      })
+        .catch(function (err) {
+          reject(err)
+        });
+    })
   }
 }
 

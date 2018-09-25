@@ -5,25 +5,27 @@
     </jobModal>
     <a-table :columns="columns"
              :rowKey="record => record.id"
-             :dataSource="data"
+             :dataSource="listData"
              :pagination="pagination"
              :loading="loading"
              @change="handleTableChange"
     >
-      <router-link  :to="'/jobs/'+record.id" slot="name" slot-scope="name,record">{{name}}</router-link>
+      <router-link  :to="'/jobs/'+record.id" slot="name" slot-scope="name,record" @click.native="setJobRecord(record)">{{name}}</router-link>
       <template   slot="type" slot-scope="type"><a-icon :type="JobTypes[type].icon" style=" margin-right: 5px "/>{{JobTypes[type].title}}</template>
       <a-badge :status="JobStatus[status].status" :text="JobStatus[status].title" slot="status"  slot-scope="status"/>
-      <template slot="operation" slot-scope="operation">
+      <template slot="operation" slot-scope="operation,record">
         <a-dropdown :trigger="['click']">
           <a class="ant-dropdown-link" href="#">
             <i class="anticon anticon-ellipsis"></i>
           </a>
           <a-menu slot="overlay">
             <a-menu-item key="0">
-              <jobModal><a href="#" slot="click">编辑</a></jobModal>
+              <jobModal :id="record.id"><a href="#" slot="click">编辑</a></jobModal>
             </a-menu-item>
             <a-menu-item key="1">
-              <span>新建</span>
+              <a-popconfirm title="Are you sure delete this task?" @confirm="confirm(record.id)" okText="Yes" cancelText="No">
+                <a href="#">删除</a>
+              </a-popconfirm>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -33,7 +35,9 @@
 </template>
 <script>
   import api from '../../../api/api'
-  import store from '../../../store/store'
+  // import store from '../../../store/store'
+  import {mapGetters} from "vuex";
+  import Vue from "vue"
   import jobModal from './jobModal';
   import { PAGE_SIZE, JobTypes, JobStatus } from "../../../constants"
 
@@ -47,7 +51,6 @@
     },
     data() {
       return {
-        data: [],
         pagination: {},
         loading: false,
         JobStatus : JobStatus,
@@ -73,7 +76,10 @@
         }],
       }
     },
-    methods: {
+    computed: {
+      ...mapGetters(['listData'])
+  },
+  methods: {
       handleTableChange (pagination, filters, sorter) {
         console.log(pagination);
         const pager = { ...this.pagination };
@@ -87,6 +93,13 @@
           ...filters,
         });
       },
+      setJobRecord(record){
+        this.$store.commit('setJobRecord',record);
+      },
+      confirm(id){
+        api.remove("jobs",id).then(()=>{Vue.set(state,'jobs.list',this.jobs)})
+    },
+
       fetch (params = {}) {
         console.log('params:', params);
         this.loading = true;
@@ -96,7 +109,7 @@
           // pagination.total = data.totalCount;
           pagination.total = PAGE_SIZE;
           this.loading = false;
-          store.commit('setUserList',data.data);
+          this.$store.commit('setList',data.data);
           this.pagination = pagination;
         });
       }

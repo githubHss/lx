@@ -1,9 +1,9 @@
 <template>
   <div>
-    <a-button type="primary" v-on:click="showModal">{{}}</a-button>
+    <span  @click="showModal"><slot name="click"> </slot></span>
     <a-modal
       width="640px"
-      title="Title"
+      :title="id?'编辑任务':'新建任务'"
       :visible="visible"
       v-on:cancel="handleCancel"
       v-on:ok="handleOk"
@@ -14,7 +14,7 @@
           label='名称'
           :labelCol="{ span: 6 }"
           :wrapperCol="{ span: 14 }"
-          fieldDecoratorId="note"
+          fieldDecoratorId="name"
           :fieldDecoratorOptions="{rules: [{  message: '请输入任务名称' }]}"
         >
           <a-input />
@@ -23,15 +23,15 @@
           label='类型'
           :labelCol="{ span: 6 }"
           :wrapperCol="{ span: 14 }"
-          fieldDecoratorId="gender"
+          fieldDecoratorId="type"
           :fieldDecoratorOptions="{rules: [{ message: '请选择任务类型' }]}"
         >
           <a-select
             placeholder=''
             @change="this.handleSelectChange"
           >
-            <a-select-option value='male'>在逃人员库</a-select-option>
-            <a-select-option value='female'>失信人员库</a-select-option>
+            <a-select-option value='在逃人员库'>在逃人员库</a-select-option>
+            <a-select-option value='失信人员库'>失信人员库</a-select-option>
           </a-select>
         </a-form-item>
       </a-form>
@@ -48,6 +48,7 @@
         formLayout: 'horizontal',
       }
     },
+    props:['id', 'name', 'type', 'scheduleType', 'startTime', 'endTime', 'payload'],
     methods: {
       showModal() {
         this.visible = true
@@ -75,7 +76,7 @@
       handleSelectChange (value) {
         console.log(value)
         this.form.setFieldsValue({
-          note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
+          // note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
         })
       },
       onChange(value, dateString) {

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!--<jobDetail1></jobDetail1>-->
-    <jobDetail2></jobDetail2>
+    <jobDetail1 v-if="record.type ==='detect_faces_in_stream'"></jobDetail1>
+    <jobDetail2 v-else></jobDetail2>
   </div>
 </template>
 
@@ -12,10 +12,19 @@
     components:{
       jobDetail1,jobDetail2
     },
+    data(){
+      return {
+        videoType:''
+      }
+    },
+    computed: {
+      record:function(){
+        return this.$store.getters.jobRecord;
+      }
+    },
+    method:{
 
+    }
   }
 </script>
 
-<style scoped>
-
-</style>

@@ -1,34 +1,12 @@
 <template>
   <div>
     <a-steps  direction="vertical" :current="current">
-      <a-step title="上传压缩文件" description="" ></a-step>
-      <a-step title="解压缩" description="This is a description." />
-      <a-step title="分析图片+人脸入库" description="This is a description." />
-      <a-step title="完成" description="This is a description." />
+      <a-step title="上传压缩文件"/>
+       <TUSUpload></TUSUpload>
+      <a-step title="解压缩" />
+      <a-step title="分析图片+人脸入库" />
+      <a-step title="完成"/>
     </a-steps>
-    <div class="steps-content">{{steps[current].content}}</div>
-    <div class="steps-action">
-      <a-button
-        v-if="current < steps.length - 1"
-        type="primary" @click="next"
-      >
-        Next
-      </a-button>
-      <a-button
-        v-if="current == steps.length - 1"
-        type="primary"
-        @click="$message.success('Processing complete!')"
-      >
-        Done
-      </a-button>
-      <a-button
-        v-if="current>0"
-        style="margin-left: 8px"
-        @click="prev"
-      >
-        Previous
-      </a-button>
-    </div>
   </div>
 </template>
 <script>

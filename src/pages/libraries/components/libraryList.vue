@@ -1,28 +1,29 @@
 <template>
   <div>
-    <libraryModal></libraryModal>
+    <libraryModal>
+      <a-button slot="click" type="primary">新建任务</a-button>
+    </libraryModal>
     <a-table :columns="columns"
-             :rowKey="record => record.login.uuid"
-             :dataSource="data"
+             :rowKey="record => record.id"
+             :dataSource="listData"
              :pagination="pagination"
              :loading="loading"
              @change="handleTableChange"
     >
-      <span slot="customTitle"><a-icon type="smile-o" /> 名称</span>
-      <router-link to="/libraries/id" slot="name" slot-scope="name">
-        {{name.first}}:{{name.last}}
-      </router-link>
-      <template slot="operation" slot-scope="operation">
+      <router-link  :to="'/libraries/'+record.id" :libraryId="record.id"  slot="name" slot-scope="name,record">{{name}}</router-link>
+      <template slot="operation" slot-scope="operation,record">
         <a-dropdown :trigger="['click']">
           <a class="ant-dropdown-link" href="#">
             <i class="anticon anticon-ellipsis"></i>
           </a>
           <a-menu slot="overlay">
             <a-menu-item key="0">
-              <jobModal>编辑</jobModal>
+              <libraryModal  :id="record.id" :props="record.name"><a href="#" slot="click">编辑</a></libraryModal>
             </a-menu-item>
             <a-menu-item key="1">
-              <span>新建</span>
+              <a-popconfirm  title="Confirm to delete?"  okText="Yes" cancelText="No">
+                <span>删除</span>
+              </a-popconfirm>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -31,11 +32,13 @@
   </div>
 </template>
 <script>
-  import reqwest from 'reqwest';
+  import api from '../../../api/api'
+  import {mapGetters} from "vuex";
   import libraryModal from './libraryModal';
+  import { PAGE_SIZE} from "../../../constants"
 
   export default {
-    name:'jobList',
+    name:'libraryList',
     components:{
       libraryModal
     },
@@ -44,26 +47,27 @@
     },
     data() {
       return {
-        data: [],
         pagination: {},
         loading: false,
         columns:[{
           dataIndex: 'name',
           key:'name',
-          slots: { title: 'customTitle' },
+          title:'名称',
           scopedSlots: { customRender: 'name' },
         }, {
+          key:'type',
           title: '类型',
-          dataIndex: 'gender',
-        }, {
-          title: '状态',
-          dataIndex: 'email',
+          dataIndex: 'type',
+          scopedSlots:{customRender:'type'}
         }, {
           title: '',
           dataIndex: 'operation',
           scopedSlots: { customRender: 'operation' },
-        }]
+        }],
       }
+    },
+    computed: {
+      ...mapGetters(['listData'])
     },
     methods: {
       handleTableChange (pagination, filters, sorter) {
@@ -79,27 +83,26 @@
           ...filters,
         });
       },
+      ok(e) {
+        console.log(e)
+      },
+      // deleteHandler:{
+      //
+      // },
       fetch (params = {}) {
         console.log('params:', params);
-        this.loading = true
-        reqwest({
-          url: 'https://randomuser.me/api',
-          method: 'get',
-          data: {
-            results: 10,
-            ...params,
-          },
-          type: 'json',
-        }).then((data) => {
+        this.loading = true;
+        api.getLibraryList({...params,results:10}).then((data) => {
           const pagination = { ...this.pagination };
           // Read total count from server
           // pagination.total = data.totalCount;
-          pagination.total = 200;
+          pagination.total = PAGE_SIZE;
           this.loading = false;
-          this.data = data.results;
+          this.$store.commit('setList',data.data);
           this.pagination = pagination;
         });
       }
     },
   }
+
 </script>

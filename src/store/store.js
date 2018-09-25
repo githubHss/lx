@@ -13,72 +13,41 @@ export default new Vuex.Store({
         list: [],
         total: null,
         page: null,
-        endTime: "",
-        group: "",
-        metaData: "{}",
-        name: "",
-        payload: "",
-        scheduleType: "",
-        startTime: "",
-        type: ""
+        // endTime: "",
+        // group: "",
+        // metaData: "{}",
+        // name: "",
+        // payload: "",
+        // scheduleType: "",
+        // startTime: "",
+        record:{}
       },
       libraries:{
         list: [],
         total: null,
         page: null,
-        id: '',
-        created_at: "",
-        modified_at: "",
-        name: "",
-        type: "",
-        metaData: {},
-        group: null
+        // id: '',
+        // created_at: "",
+        // modified_at: "",
+        // name: "",
+        // type: "",
+        // metaData: {},
+        // group: null
         },
     }
   },
   mutations: {
-    setUserList(state,data){
+    setList(state,data){
       state.jobs.list=data;
     },
-    // save(state, { payload: { data: list, total, page } }) {
-    //   return { ...state, list, total, page };
-    // },
-    // updateJobs(state,{endTime,group,metaData,name,payload,scheduleType,startTime,type}){
-    //   state.jobs.endTime = endTime;
-    //   state.jobs.group = group;
-    //   state.jobs.metaData =metaData;
-    //   state.jobs.name = name;
-    //   state.jobs.payload = payload;
-    //   state.jobs.scheduleType = scheduleType;
-    //   state.jobs.startTime=startTime;
-    //   state.jobs.type=type;
-    // }
+    setJobRecord(state,record){
+      state.jobs.record=record
+    }
   },
   getters: {
-  jobType: state =>{
-    return state.jobs.type;
-  },
+    listData:state=>state.jobs.list,
+    jobRecord:state=>state.jobs.record
   },
   actions: {
-    commitUserList:({commit},userList)=>commit('setUserList',userList)
-  //   initial({commit}){
-  //   return new Promise((resolve, reject) =>{
-  //     api.getList("jobs")
-  //       .then(({data:jobs}) => {
-  //         commit('updateJobs',jobs);
-  //         return resolve(jobs)
-  //       })
-  //       .catch(reason =>{
-  //         return reject("错误")
-  //       })
-  //   })
-  // },
-  //   setup({ dispatch, history }) {
-  //     return history.listen(({ pathname, query }) => {
-  //       if (pathname === '/jobs/list') {
-  //         dispatch({ type: 'fetch', payload: query });
-  //       }
-  //     });
-  //   },
   },
 });
